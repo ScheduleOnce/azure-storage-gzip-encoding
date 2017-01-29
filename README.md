@@ -62,6 +62,9 @@ Replacing .js files in-place using a connection string instead of host/key:
   -x, --cacheage            (Default: 2592000) Duration for cache control max
                             age header, in seconds.  Default 2592000 (30 days).
 
+  -p, --subpath             Subpath to filter blob containter contents. All other
+                            files will be skipped.
+
   --help                    Display this help screen.
 ```
 

@@ -48,7 +48,11 @@ namespace ASGE
 
         [Option('w', "wildcardcors", Required = false, DefaultValue = false,
             HelpText = "Enable wildcard CORS for this storage account.")]
-        public bool wildcard { get; set; }
+        public bool Wildcard { get; set; }
+
+        [Option('p', "subpath", Required = false, DefaultValue = null, 
+            HelpText = "Subpath to replace files in (skip all other files).")]
+        public string Subpath { get; set; }
 
 
         [HelpOption]

@@ -14,11 +14,13 @@ namespace ASGE
 {
     static class Utility
     {
-        public static void EnsureGzipFiles(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension, int cacheControlMaxAgeSeconds, bool simulate)
+        public static void EnsureGzipFiles(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension,
+            int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
         {
             Trace.TraceInformation("Enumerating files.");
 
             string cacheControlHeader = "public, max-age=" + cacheControlMaxAgeSeconds.ToString();
+            string pathToCheck = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}/";
 
             var blobInfos = container.ListBlobs(null, true, BlobListingDetails.Metadata);
 
@@ -26,6 +28,12 @@ namespace ASGE
             {
                 CloudBlob gzipBlob = null;                
                 CloudBlob blob = (CloudBlob)blobInfo;
+
+                // Skip other files if subpath is specified
+                if (pathToCheck != null && !blobInfo.Uri.LocalPath.StartsWith(pathToCheck, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return;
+                }
 
                 // Only work with desired extensions
                 string extension = Path.GetExtension(blobInfo.Uri.LocalPath);

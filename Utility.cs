@@ -146,7 +146,7 @@ namespace ASGE
             string cacheControlHeader = "public, max-age=" + cacheControlMaxAgeSeconds.ToString();
             string pathToCheck = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}/";
             string pathToCheckFile = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}";
-            Trace.TraceInformation(">>" + pathToCheck);
+
             var blobInfos = container.ListBlobs(null, true, BlobListingDetails.Metadata);
             Parallel.ForEach(blobInfos, (blobInfo) =>
             {
@@ -155,8 +155,6 @@ namespace ASGE
                 {
                     return;
                 }
-
-                Trace.TraceInformation("skiped" + blobInfo.Uri.LocalPath);
                 // Only work with desired extensions
                 string extension = Path.GetExtension(blobInfo.Uri.LocalPath);
                 if (!extensions.Contains(extension, StringComparer.OrdinalIgnoreCase))

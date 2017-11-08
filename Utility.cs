@@ -14,8 +14,7 @@ namespace ASGE
 {
     static class Utility
     {
-        public static void EnsureGzipFiles(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension,
-		int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
+        public static void EnsureGzipFiles(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension, int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
         {
             Trace.TraceInformation("Enumerating files.");
 

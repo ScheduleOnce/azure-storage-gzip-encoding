@@ -21,6 +21,7 @@ namespace ASGE
 
             string cacheControlHeader = "public, max-age=" + cacheControlMaxAgeSeconds.ToString();
             string pathToCheck = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}/";
+            string pathToCheckFile = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}";
 
             var blobInfos = container.ListBlobs(null, true, BlobListingDetails.Metadata);
 
@@ -30,7 +31,7 @@ namespace ASGE
                 CloudBlob blob = (CloudBlob)blobInfo;
 
                 // Skip other files if subpath is specified
-                if (pathToCheck != null && !blobInfo.Uri.LocalPath.StartsWith(pathToCheck, StringComparison.InvariantCultureIgnoreCase))
+                if (pathToCheck != null && !blobInfo.Uri.LocalPath.StartsWith(pathToCheck, StringComparison.InvariantCultureIgnoreCase) && pathToCheckFile != blobInfo.Uri.LocalPath)
                 {
                     return;
                 }

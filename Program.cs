@@ -44,14 +44,14 @@ namespace ASGE
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer = blobClient.GetContainerReference(options.Container);
 
-                if (options.WithoutGZip)
+                if (options.GZip)
                 {
-                    Utility.ApplyCacheControlHeader(blobContainer, options.Extensions, options.Replace, options.NewExtension, options.MaxAgeSeconds,options.Simulate, options.Subpath);
+                    // Do the compression work
+                    Utility.EnsureGzipFiles(blobContainer, options.Extensions, options.Replace, options.NewExtension, options.MaxAgeSeconds, options.Simulate, options.Subpath);
                 }
                 else
                 {
-                    // Do the compression work
-                    Utility.EnsureGzipFiles(blobContainer, options.Extensions, options.Replace, options.NewExtension, options.MaxAgeSeconds,options.Simulate, options.Subpath);
+                    Utility.ApplyCacheControlHeader(blobContainer, options.Extensions, options.Replace, options.NewExtension, options.MaxAgeSeconds, options.Simulate, options.Subpath);
                 }
                 // Enable CORS if appropriate
                 if (options.Wildcard)

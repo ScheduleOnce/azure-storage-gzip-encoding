@@ -63,7 +63,10 @@ Replacing .js files in-place using a connection string instead of host/key:
                             age header, in seconds.  Default 2592000 (30 days).
 
   -p, --subpath             Subpath to filter blob containter contents. All other
-                            files will be skipped.
+                            files will be skipped.File path can also be used here.
+
+  -z, --gzip                (Default: True) Apply Compression and CacheControl Header. 
+                            False will skip compression and apply just CacheControl Header.
 
   --help                    Display this help screen.
 ```

@@ -54,9 +54,9 @@ namespace ASGE
             HelpText = "Subpath to replace files in (skip all other files).")]
         public string Subpath { get; set; }
 
-        [Option('z', "withoutgzip", Required = false, DefaultValue = false,
-            HelpText = "WithoutGZip to just apply CacheControl Header.")]
-        public bool WithoutGZip { get; set; }
+        [Option('z', "gzip", Required = false, DefaultValue = true,
+            HelpText = "GZip to Compression with CacheControl Header.")]
+        public bool GZip { get; set; }
 
         [HelpOption]
         public string GetUsage()

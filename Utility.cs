@@ -15,7 +15,7 @@ namespace ASGE
     static class Utility
     {
         public static void EnsureGzipFiles(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension,
-            int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
+		int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
         {
             Trace.TraceInformation("Enumerating files.");
 
@@ -137,6 +137,37 @@ namespace ASGE
             serviceProperties.Cors = alterCorsRules(serviceProperties.Cors) ?? new CorsProperties();
 
             blobClient.SetServiceProperties(serviceProperties);
+        }
+
+        public static void ApplyCacheControlHeader(CloudBlobContainer container, IEnumerable<string> extensions, bool inPlace, string newExtension, int cacheControlMaxAgeSeconds, bool simulate, string subpath = null)
+        {
+            Trace.TraceInformation("Enumerating files.");
+
+            string cacheControlHeader = "public, max-age=" + cacheControlMaxAgeSeconds.ToString();
+            string pathToCheck = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}/";
+            string pathToCheckFile = string.IsNullOrEmpty(subpath) ? null : $"/{container.Name}/{subpath}";
+            Trace.TraceInformation(">>" + pathToCheck);
+            var blobInfos = container.ListBlobs(null, true, BlobListingDetails.Metadata);
+            Parallel.ForEach(blobInfos, (blobInfo) =>
+            {
+                // Skip other files if subpath is specified
+                if (pathToCheck != null && !blobInfo.Uri.LocalPath.StartsWith(pathToCheck, StringComparison.InvariantCultureIgnoreCase) && pathToCheckFile != blobInfo.Uri.LocalPath)
+                {
+                    return;
+                }
+
+                Trace.TraceInformation("skiped" + blobInfo.Uri.LocalPath);
+                // Only work with desired extensions
+                string extension = Path.GetExtension(blobInfo.Uri.LocalPath);
+                if (!extensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+                CloudBlob blob = (CloudBlob)blobInfo;
+                Trace.TraceInformation("Configuring headers");
+                blob.Properties.CacheControl = cacheControlHeader;
+                blob.SetProperties();
+            });
         }
     }
 }
